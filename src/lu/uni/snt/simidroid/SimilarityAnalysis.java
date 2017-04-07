@@ -2,7 +2,15 @@ package lu.uni.snt.simidroid;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Set;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 import lu.uni.snt.simidroid.utils.CommonUtils;
 
@@ -73,62 +81,75 @@ public class SimilarityAnalysis
 		
 		return score1 > score2 ? score1 : score2;
 	}
-	
-	public void output()
-	{
-		StringBuilder sb = new StringBuilder();
+
+	protected JSONObject makeResult(){
+		JSONObject r = new JSONObject();
+		JSONObject c = new JSONObject();
+		JSONObject v = new JSONObject();
 		
 		double similarityScore = computeSimilarityScore(identicalFeatures.size(), similarFeatures.size(), newFeatures.size(), deletedFeatures.size());
 		
-		sb.append("==>" + this.getClass().getName() + "|" + aa1.appName.replace(".apk", "") + "-" + aa2.appName.replace(".apk", "") + "," + identicalFeatures.size() + "," + similarFeatures.size() + "," + newFeatures.size() + "," + deletedFeatures.size() + "," + similarityScore + "\n");
-		sb.append("identical: " + identicalFeatures.size() + "\n");
-		sb.append("similar: " + similarFeatures.size() + "\n");
-		sb.append("new: " + newFeatures.size() + "\n");
-		sb.append("deleted: " + deletedFeatures.size() + "\n");
-		sb.append("simiScore: " + similarityScore);
-		
-		System.out.println(sb.toString());
+		c.put("identical", String.valueOf(identicalFeatures.size()));
+		c.put("similar", String.valueOf(similarFeatures.size()));
+		c.put("new", String.valueOf(newFeatures.size()));
+		c.put("deleted", String.valueOf(deletedFeatures.size()));
+		c.put("simiScore", String.valueOf(similarityScore));
+		r.put("conclusion", c);
+
+		JSONArray identical = new JSONArray();
+		for(String feature : identicalFeatures){
+			identical.put(feature);
+		}
+		v.put("identical", identical);
+		JSONArray similar = new JSONArray();
+		for(String feature : similarFeatures){
+			similar.put(feature);
+		}
+		v.put("similar", similar);
+		JSONArray newFt = new JSONArray();
+		for(String feature : newFeatures){
+			newFt.put(feature);
+		}
+		v.put("new", newFt);
+		JSONArray deleted = new JSONArray();
+		for(String feature : deletedFeatures){
+			deleted.put(feature);
+		}
+		v.put("deleted", deleted);
+		r.put("verbose", v);
+		return r;
 	}
 	
-	public void output(boolean verbose)
-	{
-		output();
+	public void output(boolean verbose){
+		JSONObject r = this.makeResult();
+		JSONObject c = r.getJSONObject("conclusion");
+		StringBuilder sb = new StringBuilder();
 		
-		if (verbose)
-		{
-			StringBuilder sb = new StringBuilder();
-			
-			sb.append("\n");
-			sb.append("-------------------------------------------------------------------------------------" + "\n");
-			sb.append("identical:" + "\n");
-			for (String feature : identicalFeatures)
-			{
-				sb.append("  " + feature + "\n");
+		sb.append("==>" + this.getClass().getName() + "|" + aa1.appName.replace(".apk", "") + "-" + aa2.appName.replace(".apk", ""));
+		System.out.println(sb.toString());
+		for(String key : c.keySet()){
+			System.out.println(key + ": " + c.get(key));
+		}
+		if(verbose){
+			JSONObject v = r.getJSONObject("verbose");
+			for(String key : v.keySet()){
+				System.out.println("------------------------------------------------------------------------");
+				System.out.println(key + ":");
+				JSONArray a = v.getJSONArray(key);
+				for(int i=0;i<a.length();i++){
+					System.out.println("    " + a.get(i));
+				}
 			}
-			
-			sb.append("\n");
-			sb.append("-------------------------------------------------------------------------------------" + "\n");
-			sb.append("similar:" + "\n");
-			for (String feature : similarFeatures)
-			{
-				sb.append("  " + feature + "\n");
-			}
-			
-			sb.append("\n");
-			sb.append("new:" + "\n");
-			for (String feature : newFeatures)
-			{
-				sb.append("  " + feature + "\n");
-			}
-			
-			sb.append("\n");
-			sb.append("deleted:" + "\n");
-			for (String feature : deletedFeatures)
-			{
-				sb.append("  " + feature + "\n");
-			}
-			
-			System.out.println(sb.toString());
+		}
+	}
+	
+	public void writeResultAsJSON(String path){
+		Path p = Paths.get(path);
+		try(BufferedWriter writer = Files.newBufferedWriter(p)){
+			writer.write(this.makeResult().toString(4));
+			System.out.println("result write at: " + p.toAbsolutePath());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

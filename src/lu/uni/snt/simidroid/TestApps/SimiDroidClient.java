@@ -36,6 +36,8 @@ public class SimiDroidClient {
 		
 		sa.compare(aa1, aa2);
 
-		sa.output(true);
+//		sa.output(true);
+//		sa.output(false);
+		sa.writeResultAsJSON("try");
 	}
 }
