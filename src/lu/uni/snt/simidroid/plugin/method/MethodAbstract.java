@@ -23,15 +23,23 @@ public class MethodAbstract
 		
 		for (int i = 0; i < stmts.size(); i++)
 		{
-			StmtAbstract src = stmts.get(i);
-			StmtAbstract dest = ma.stmts.get(i);
-			
-			if (! src.equalsTo(dest))
+			try
 			{
-				System.out.println("STMT: " + src.stmt + "---->" + dest.stmt);
+				StmtAbstract src = stmts.get(i);
+				StmtAbstract dest = ma.stmts.get(i);
 				
+				if (! src.equalsTo(dest))
+				{
+					System.out.println("STMT: " + src.stmt + "---->" + dest.stmt);
+					
+					return false;
+				}
+			}
+			catch (IndexOutOfBoundsException ex)
+			{
 				return false;
 			}
+			
 		}
 		
 		return true;

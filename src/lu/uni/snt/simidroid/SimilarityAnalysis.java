@@ -41,6 +41,7 @@ public class SimilarityAnalysis
 				else
 				{
 					similarFeatures.add(feature);
+					System.out.println("[CHANGE] " + feature + ":" + src.toString() + "-->" + dest.toString());
 				}
 			}
 			else
@@ -63,6 +64,11 @@ public class SimilarityAnalysis
 	protected void preAnalysis(Map<String, Object> features1, Map<String, Object> features2) { }
 	
 	protected void postAnalysis() { }
+	
+	public double computeSimilarityScore()
+	{
+		return computeSimilarityScore(identicalFeatures.size(), similarFeatures.size(), newFeatures.size(), deletedFeatures.size());
+	}
 	
 	public double computeSimilarityScore(int identicalNum, int similarNum, int newNum, int deletedNum)
 	{

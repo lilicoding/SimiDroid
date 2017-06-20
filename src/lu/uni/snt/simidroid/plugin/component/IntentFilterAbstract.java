@@ -40,6 +40,29 @@ public class IntentFilterAbstract
 		
 		return true;
 	}
+
+	@Override
+	public String toString() 
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		boolean first = true;
+		
+		for (IntentFilterItem ifi : this.intentFilters)
+		{
+			if (first)
+			{
+				sb.append(ifi.toString());
+				first = false;
+			}
+			else
+			{
+				sb.append("," + ifi.toString());
+			}
+		}
+		
+		return sb.toString();
+	}
 	
 	
 }
