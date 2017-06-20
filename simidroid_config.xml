@@ -1,0 +1,13 @@
+<SimiDroid>
+	<AndroidJarsPath>/Users/li.li/Project/github/android-platforms</AndroidJarsPath>
+	<!-- 
+	<Plugin name="METHOD">
+		<LibrarySetPath>res/libs91.txt</LibrarySetPath>
+	</Plugin>
+	 
+	<Plugin name="COMPONENT" />
+	<Plugin name="RESOURCE" />
+	-->
+	
+	<Plugin name="COMPONENT" />
+</SimiDroid>
