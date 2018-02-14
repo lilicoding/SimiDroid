@@ -18,6 +18,8 @@ public class Config
 	public static String androidJars;
 	public static String librarySetPath;
 	
+	public static double simiThreshold = 0d;
+	
 	public static PluginName pulginName = PluginName.METHOD;
 	public static Set<PluginName> supportedPlugins = new HashSet<PluginName>();
 	
@@ -25,7 +27,9 @@ public class Config
 	
 	public static final String ELE_AndroidJarsPath = "AndroidJarsPath";
 	public static final String ELE_Plugin = "Plugin";
+	public static final String ELE_SIMI_THRESHOLD = "SimiThreshold";
 	public static final String ELE_LibrarySetPath = "LibrarySetPath";
+	
 	
 	public static void init()
 	{
@@ -37,6 +41,12 @@ public class Config
 			Element simidroid = doc.getRootElement();
 
 			androidJars = simidroid.getChild(ELE_AndroidJarsPath).getText();
+			
+			Element threshold = simidroid.getChild(ELE_SIMI_THRESHOLD);
+			if (null != threshold)
+			{
+				simiThreshold = Double.parseDouble(threshold.getText());
+			}
 			
 			List<Element> pluginEles = simidroid.getChildren(ELE_Plugin);
 			for (Element pluginEle : pluginEles)

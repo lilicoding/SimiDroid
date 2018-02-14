@@ -19,6 +19,7 @@ public class SimiDroidClient {
 			String dirPath = args[0];
 			
 			File dir = new File(dirPath);
+			
 			File[] files = dir.listFiles();
 			
 			if (files.length < 2)

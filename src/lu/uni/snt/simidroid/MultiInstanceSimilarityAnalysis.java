@@ -13,7 +13,7 @@ import lu.uni.snt.simidroid.utils.CommonUtils;
 public class MultiInstanceSimilarityAnalysis 
 {
 	protected AppAbstract[] aas;
-	double[][] distances;
+	double[][] similarities;
 
 	public Set<String> identicalFeatures = new HashSet<String>();
 	public Set<String> similarFeatures = new HashSet<String>();
@@ -23,6 +23,11 @@ public class MultiInstanceSimilarityAnalysis
 	public void compare(AppAbstract[] aas, Class<? extends SimilarityAnalysis> saClass) throws Exception
 	{
 		this.aas = aas;
+		
+		for (int i = 0; i < aas.length; i++)
+		{
+			System.out.println("a" + i + "-->" + aas[i].appName);
+		}
 		
 		//To compute distances between every two apps
 		System.out.println("To compute distances between every two apps");
@@ -56,15 +61,15 @@ public class MultiInstanceSimilarityAnalysis
 			}
 		}
 		
-		distances = new double[aas.length][aas.length];
+		similarities = new double[aas.length][aas.length];
 		
 		for (int i = 0; i < aas.length; i++)
 		{
 			for (int j = i+1; j < aas.length; j++)
 			{
 				double score = analyses[i][j].computeSimilarityScore();
-				distances[i][j] = distances[j][i] = score;
-				System.out.println("The distance for app_{" + i + ", " + j + "} is " + distances[i][j]);
+				similarities[i][j] = similarities[j][i] = score;
+				System.out.println("The distance for app_{" + i + ", " + j + "} is " + similarities[i][j]);
 			}
 		}
 		
@@ -147,12 +152,15 @@ public class MultiInstanceSimilarityAnalysis
 			sb.append(aas[i].appName + ": ");
 			for (int j = 0; j < aas.length; j++)
 			{
-				sb.append("\t" + distances[i][j]);
+				sb.append("\t" + similarities[i][j]);
 			}
 			sb.append("\n");
 		}
 		
 		System.out.println(sb.toString());
+		
+		//To clusters
+		outputClusters();
 	}
 	
 	public void output(boolean verbose)
@@ -199,6 +207,20 @@ public class MultiInstanceSimilarityAnalysis
 			}
 			
 			System.out.println(sb.toString());
+		}
+	}
+	
+	public void outputClusters()
+	{
+		SimilarityCluster sc = new SimilarityCluster();
+		
+		//Use the configured threshold if is configured, otherwise use the average similarity obtained from known similarities
+		double threshold = Config.simiThreshold != 0d ? Config.simiThreshold : sc.averageSimilarity(similarities);
+		Set<Set<String>> clusters = sc.cluster(similarities, threshold);
+		System.out.println("In total, we obtain " + clusters.size() + " clusters:");
+		for (Set<String> cluster : clusters)
+		{
+			System.out.println(cluster.size() + "-->" + cluster);
 		}
 	}
 }
