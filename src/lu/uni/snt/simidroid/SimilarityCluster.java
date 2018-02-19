@@ -27,7 +27,7 @@ public class SimilarityCluster
 		return (double) total / count;
 	}
 	
-	public Set<Set<String>> cluster(double[][] similarities, double threshold)
+	public Set<Set<String>> cluster(double[][] similarities, String[] applications, double threshold)
 	{
 		Map<Integer, Set<String>> clusters = new HashMap<Integer, Set<String>>();
 		Map<String, Integer> app2clusterSeqs = new HashMap<String, Integer>();
@@ -103,7 +103,16 @@ public class SimilarityCluster
 		Set<Set<String>> set = new HashSet<Set<String>>();
 		for (int key : clusters.keySet())
 		{
-			set.add(clusters.get(key));
+			Set<String> appIDs = clusters.get(key);
+			Set<String> apps = new HashSet<String>();
+			for (String id : appIDs)
+			{
+				id = id.replace("a", "").trim();
+				String app = applications[Integer.parseInt(id)];
+				apps.add(app);
+			}
+			
+			set.add(apps);
 		}
 		
 		return set;

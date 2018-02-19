@@ -14,6 +14,7 @@ public class MultiInstanceSimilarityAnalysis
 {
 	protected AppAbstract[] aas;
 	double[][] similarities;
+	String[] apps;
 
 	public Set<String> identicalFeatures = new HashSet<String>();
 	public Set<String> similarFeatures = new HashSet<String>();
@@ -62,6 +63,12 @@ public class MultiInstanceSimilarityAnalysis
 		}
 		
 		similarities = new double[aas.length][aas.length];
+		apps = new String[aas.length];
+		
+		for (int i = 0; i < apps.length; i++)
+		{
+			apps[i] = aas[i].appName;
+		}
 		
 		for (int i = 0; i < aas.length; i++)
 		{
@@ -216,7 +223,7 @@ public class MultiInstanceSimilarityAnalysis
 		
 		//Use the configured threshold if is configured, otherwise use the average similarity obtained from known similarities
 		double threshold = Config.simiThreshold != 0d ? Config.simiThreshold : sc.averageSimilarity(similarities);
-		Set<Set<String>> clusters = sc.cluster(similarities, threshold);
+		Set<Set<String>> clusters = sc.cluster(similarities, apps, threshold);
 		System.out.println("In total, we obtain " + clusters.size() + " clusters:");
 		for (Set<String> cluster : clusters)
 		{

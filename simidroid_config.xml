@@ -11,6 +11,6 @@
 	
 	<Plugin name="COMPONENT" />
 
-	<SimiThreshold>0.8</SimiThreshold>
+	<SimiThreshold>0.1</SimiThreshold>
 	
 </SimiDroid>
