@@ -34,7 +34,7 @@ public class SimiDroidClient4PW {
 				}
 				else
 				{
-					compare(new MethodFeatureExtraction(Config.app1Path), new MethodFeatureExtraction(Config.app2Path), new MethodSimilarityAnalysis(Config.librarySetPath));
+					compare(new MethodFeatureExtraction(Config.app1Path), new MethodFeatureExtraction(Config.app2Path), new MethodSimilarityAnalysis(Config.librarySetPath, Config.librarySetExclusive));
 				}
 				
 				break;
@@ -43,7 +43,14 @@ public class SimiDroidClient4PW {
 				
 				break;
 			case RESOURCE:
-				compare(new ResourceFeatureExtraction(Config.app1Path), new ResourceFeatureExtraction(Config.app2Path), new ResourceSimilarityAnalysis());
+				if (null == Config.resExtensionSetPath)
+				{
+					compare(new ResourceFeatureExtraction(Config.app1Path), new ResourceFeatureExtraction(Config.app2Path), new ResourceSimilarityAnalysis());
+				}
+				else
+				{
+					compare(new ResourceFeatureExtraction(Config.app1Path), new ResourceFeatureExtraction(Config.app2Path), new ResourceSimilarityAnalysis(Config.resExtensionSetPath, Config.resExtensionSetExclusive));
+				}
 				
 				break;
 			}

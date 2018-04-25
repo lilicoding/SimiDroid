@@ -11,14 +11,16 @@ import lu.uni.snt.simidroid.utils.MethodSignature;
 public class MethodSimilarityAnalysis extends SimilarityAnalysis 
 {
 	private Set<String> libraries = null;
+	private boolean exclusive = false;
 	
 	public MethodSimilarityAnalysis() { }
 	
-	public MethodSimilarityAnalysis(String librarySetPath)
+	public MethodSimilarityAnalysis(String librarySetPath, boolean exclusive)
 	{
 		libraries = CommonUtils.loadFile(librarySetPath);
+		this.exclusive = exclusive;
 		
-		System.out.println("Excluding Library is Enabled.");
+		System.out.println("Library Set is Enabled.");
 	}
 	
 	@Override
@@ -33,12 +35,11 @@ public class MethodSimilarityAnalysis extends SimilarityAnalysis
 	@Override
 	protected void preAnalysis(Map<String, Object> features1, Map<String, Object> features2) 
 	{
-		// for excluding libraries
 		if (null != libraries)
 		{
-			Set<String> methodsToRemove1 = new HashSet<String>();
-			Set<String> methodsToRemove2 = new HashSet<String>();
-			
+			Set<String> libraryMethods1 = new HashSet<String>();
+			Set<String> libraryMethods2 = new HashSet<String>();
+
 			for (String method : features1.keySet())
 			{
 				boolean libraryMethod = false;
@@ -56,14 +57,11 @@ public class MethodSimilarityAnalysis extends SimilarityAnalysis
 				
 				if (libraryMethod)
 				{
-					methodsToRemove1.add(method);
+					libraryMethods1.add(method);
 				}
 			}
 			
-			for (String method : methodsToRemove1)
-			{
-				features1.remove(method);
-			}
+			
 			
 			for (String method : features2.keySet())
 			{
@@ -82,13 +80,43 @@ public class MethodSimilarityAnalysis extends SimilarityAnalysis
 				
 				if (libraryMethod)
 				{
-					methodsToRemove2.add(method);
+					libraryMethods2.add(method);
 				}
 			}
 			
-			for (String method : methodsToRemove2)
+			if (exclusive)
 			{
-				features2.remove(method);
+				//considering only library-related code
+				
+				Set<String> allMethods1 = CommonUtils.cloneSet(features1.keySet());
+				allMethods1.removeAll(libraryMethods1);
+				
+				for (String method : allMethods1)
+				{
+					features1.remove(method);
+				}
+				
+				Set<String> allMethods2 = CommonUtils.cloneSet(features1.keySet());
+				allMethods2.removeAll(libraryMethods2);
+				
+				for (String method : allMethods2)
+				{
+					features2.remove(method);
+				}
+			}
+			else
+			{
+				// excluding libraries
+				
+				for (String method : libraryMethods1)
+				{
+					features1.remove(method);
+				}
+				
+				for (String method : libraryMethods2)
+				{
+					features2.remove(method);
+				}
 			}
 		}
 		

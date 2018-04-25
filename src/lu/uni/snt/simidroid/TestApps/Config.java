@@ -17,6 +17,10 @@ public class Config
 	
 	public static String androidJars;
 	public static String librarySetPath;
+	public static boolean librarySetExclusive = false;
+	
+	public static String resExtensionSetPath;
+	public static boolean resExtensionSetExclusive = false;
 	
 	public static double simiThreshold = 0d;
 	
@@ -28,8 +32,11 @@ public class Config
 	public static final String ELE_AndroidJarsPath = "AndroidJarsPath";
 	public static final String ELE_Plugin = "Plugin";
 	public static final String ELE_SIMI_THRESHOLD = "SimiThreshold";
-	public static final String ELE_LibrarySetPath = "LibrarySetPath";
 	
+	public static final String ELE_LibrarySetPath = "LibrarySetPath";
+	public static final String ELE_ResExtensionSetPath = "ResExtensionSetPath";
+	
+	public static final String ATTR_Exclusive = "exclusive";
 	
 	public static void init()
 	{
@@ -57,7 +64,20 @@ public class Config
 				{
 					supportedPlugins.add(PluginName.METHOD);
 					
-					librarySetPath = pluginEle.getChildText(ELE_LibrarySetPath);
+					Element librarySetPathEle = pluginEle.getChild(ELE_LibrarySetPath);
+					if (null != librarySetPathEle)
+					{
+						librarySetPath = librarySetPathEle.getText();
+						
+						String exclusiveValue = librarySetPathEle.getAttributeValue(ATTR_Exclusive);
+						if (null != exclusiveValue)
+						{
+							if ("true".equals(exclusiveValue))
+							{
+								librarySetExclusive = true;
+							}
+						}
+					}
 				}
 				else if (pluginName.equals(PluginName.COMPONENT.getPluginName()))
 				{
@@ -66,6 +86,21 @@ public class Config
 				else if (pluginName.equals(PluginName.RESOURCE.getPluginName()))
 				{
 					supportedPlugins.add(PluginName.RESOURCE);
+					
+					Element resExtensionSetPathEle = pluginEle.getChild(ELE_ResExtensionSetPath);
+					if (null != resExtensionSetPathEle)
+					{
+						resExtensionSetPath = resExtensionSetPathEle.getText();
+						
+						String exclusiveValue = resExtensionSetPathEle.getAttributeValue(ATTR_Exclusive);
+						if (null != exclusiveValue)
+						{
+							if ("true".equals(exclusiveValue))
+							{
+								resExtensionSetExclusive = true;
+							}
+						}
+					}
 				}
 				else
 				{
