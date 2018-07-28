@@ -96,7 +96,7 @@ public class MethodSimilarityAnalysis extends SimilarityAnalysis
 					features1.remove(method);
 				}
 				
-				Set<String> allMethods2 = CommonUtils.cloneSet(features1.keySet());
+				Set<String> allMethods2 = CommonUtils.cloneSet(features2.keySet());
 				allMethods2.removeAll(libraryMethods2);
 				
 				for (String method : allMethods2)

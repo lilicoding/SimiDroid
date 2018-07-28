@@ -1,13 +1,19 @@
 <SimiDroid>
-	<AndroidJarsPath>/Users/li.li/Project/github/android-platforms</AndroidJarsPath>
+	<AndroidJarsPath>/Users/clii0040/Projects/github/android-platforms</AndroidJarsPath>
 	<!-- 
 	<Plugin name="METHOD">
+        //Do not compare library code
 		<LibrarySetPath>res/libs91.txt</LibrarySetPath>
+     
+        //Compares library only
+        <LibrarySetPath exclusive="true">res/libs91.txt</LibrarySetPath>
 	</Plugin>
 	 
 	<Plugin name="COMPONENT" />
 	<Plugin name="RESOURCE" />
 	-->
 	
-	<Plugin name="RESOURCE" />
+    <Plugin name="METHOD">
+        <LibrarySetPath>res/libs91.txt</LibrarySetPath>
+    </Plugin>
 </SimiDroid>

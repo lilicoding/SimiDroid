@@ -10,7 +10,7 @@
 	-->
 	
 	<Plugin name="RESOURCE">
-		<ResExtensionSetPath exclusive="xxxxx">res/extensions.txt</ResExtensionSetPath>
+		<ResExtensionSetPath exclusive="true">res/extensions.txt</ResExtensionSetPath>
 	</Plugin>
 
 	<SimiThreshold>0.1</SimiThreshold>
